@@ -10,6 +10,7 @@ import org.example.blog_platform.service.CommentService;
 import org.example.blog_platform.service.PostService;
 import org.example.blog_platform.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,14 +23,13 @@ public class CommentController {
     private final PostService postService;
     private final UserService userService;
 
-
     @PostMapping
-    public ResponseEntity<CommentResponse> addComment(@PathVariable Long postId, @RequestBody CommentRequest request) {
+    public ResponseEntity<CommentResponse> addComment(@PathVariable Long postId, @RequestBody CommentRequest request, Authentication authentication) {
         Post post = postService.findById(postId).orElseThrow();
-        User author = userService.findByUsername("admin").orElseThrow();
+        String username = authentication.getName();
+        User author = userService.findByUsername(username).orElseThrow();
         return ResponseEntity.ok(CommentMapper.toDto(commentService.addComment(request.getContent(), author, post)));
     }
-
 
     @GetMapping
     public List<CommentResponse> getComments(@PathVariable Long postId) {
