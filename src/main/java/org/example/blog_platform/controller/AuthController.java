@@ -20,7 +20,7 @@ public class AuthController {
     private final JwtTokenUtil jwtTokenUtil;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @PostMapping("/register")
+    @PostMapping("/registration")
     public ResponseEntity<?> register(@RequestBody User user) {
         if(userService.findByUsername(user.getUsername()).isPresent()) {
             return ResponseEntity.badRequest().body("Username is already taken");
@@ -28,8 +28,8 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role userRole = roleRepository.findByName("USER").orElseThrow();
         user.getRoles().add(userRole);
-        User savedUser = userService.save(user);
-        String token = jwtTokenUtil.generateToken(savedUser.getUsername());
+        String token = jwtTokenUtil.generateToken(user.getUsername());
+        userService.save(user);
         return ResponseEntity.ok().body("Bearer " + token);
     }
 
@@ -39,7 +39,8 @@ public class AuthController {
         if(passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             String token = jwtTokenUtil.generateToken(user.getUsername());
             return ResponseEntity.ok().body("Bearer " + token);
-        } else {
+        }
+        else {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
     }
