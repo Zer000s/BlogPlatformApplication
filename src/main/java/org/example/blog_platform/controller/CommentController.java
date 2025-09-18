@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/api/posts/{postId}/comments")
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
@@ -23,14 +23,15 @@ public class CommentController {
     private final UserService userService;
 
 
-    @PostMapping("/{postId}")
+    @PostMapping
     public ResponseEntity<CommentResponse> addComment(@PathVariable Long postId, @RequestBody CommentRequest request) {
         Post post = postService.findById(postId).orElseThrow();
         User author = userService.findByUsername("admin").orElseThrow();
         return ResponseEntity.ok(CommentMapper.toDto(commentService.addComment(request.getContent(), author, post)));
     }
 
-    @GetMapping("/{postId}")
+
+    @GetMapping
     public List<CommentResponse> getComments(@PathVariable Long postId) {
         Post post = postService.findById(postId).orElseThrow();
         return commentService.findByPost(post).stream()
