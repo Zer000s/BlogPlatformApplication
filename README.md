@@ -62,9 +62,9 @@ mvn clean package -DskipTests
 docker-compose up --build
 ```
 3. После запуска:
-- API доступно: [http://localhost:8080](http://localhost:9090)
-- Swagger UI: [http://localhost:8080/swagger-ui/index.html](http://localhost:9090/swagger-ui/index.html)
-- OpenAPI спецификация: [http://localhost:8080/v3/api-docs](http://localhost:9090/v3/api-docs)
+- API доступно: [http://localhost:9090](http://localhost:9090)
+- Swagger UI: [http://localhost:9090/swagger-ui/index.html](http://localhost:9090/swagger-ui/index.html)
+- OpenAPI спецификация: [http://localhost:9090/v3/api-docs](http://localhost:9090/v3/api-docs)
 
 
 4. Для тестирования можно использовать Swagger UI или Postman.
